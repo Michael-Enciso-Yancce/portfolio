@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portfolio.michael.dto.ApiResponse;
 import com.portfolio.michael.dto.admin.request.FileRequest;
 import com.portfolio.michael.dto.admin.response.FileResponse;
 import com.portfolio.michael.entity.File;
@@ -27,9 +28,9 @@ public class FileController {
     private final FileMapper fileMapper;
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
-    public ResponseEntity<FileResponse> uploadFile(@ModelAttribute FileRequest request) {
+    public ResponseEntity<ApiResponse<FileResponse>> uploadFile(@ModelAttribute FileRequest request) {
         File savedFile = fileService.saveFile(request.getFile(), request.getRelatedTable(), request.getRelatedId());
-        return ResponseEntity.ok(fileMapper.toResponse(savedFile));
+        return ResponseEntity.ok(ApiResponse.success("File uploaded successfully", fileMapper.toResponse(savedFile)));
     }
 
     @GetMapping("/{filename:.+}")
