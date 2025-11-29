@@ -31,9 +31,6 @@ public class Education {
     @Column(nullable = false)
     private String degree;
 
-    @Column
-    private String logo;
-
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 

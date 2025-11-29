@@ -1,4 +1,4 @@
-package com.portfolio.michael.service;
+package com.portfolio.michael.service.admin.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -16,13 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.portfolio.michael.entity.File;
 import com.portfolio.michael.repository.FileRepository;
+import com.portfolio.michael.service.admin.FileService;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class FileService {
+public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
 
@@ -41,6 +42,7 @@ public class FileService {
         }
     }
 
+    @Override
     public File saveFile(MultipartFile file, String relatedTable, Long relatedId) {
         try {
             String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -48,24 +50,26 @@ public class FileService {
                     .normalize().toAbsolutePath();
 
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-                throw new RuntimeException("Cannot store file outside current directory.");
+                throw new RuntimeException("Cannot store file outside current directory");
             }
 
             try (var inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            File fileEntity = new File();
-            fileEntity.setFilePath(filename);
-            fileEntity.setRelatedTable(relatedTable);
-            fileEntity.setRelatedId(relatedId);
+            File fileEntity = File.builder()
+                    .filePath(filename)
+                    .relatedTable(relatedTable)
+                    .relatedId(relatedId)
+                    .build();
 
             return fileRepository.save(fileEntity);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file.", e);
+            throw new RuntimeException("Failed to store file", e);
         }
     }
 
+    @Override
     public Resource loadFile(String filename) {
         try {
             Path file = rootLocation.resolve(filename);

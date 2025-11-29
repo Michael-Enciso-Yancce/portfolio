@@ -21,10 +21,12 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
+    @Override
     public AuthResponse login(AuthRequest request) {
         // ✅ Verificar credenciales
         try {
-            authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+            authManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         } catch (AuthenticationException ex) {
             throw new RuntimeException("Credenciales inválidas");
         }

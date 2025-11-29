@@ -15,7 +15,7 @@ import com.portfolio.michael.dto.admin.request.FileRequest;
 import com.portfolio.michael.dto.admin.response.FileResponse;
 import com.portfolio.michael.entity.File;
 import com.portfolio.michael.mapper.FileMapper;
-import com.portfolio.michael.service.FileService;
+import com.portfolio.michael.service.admin.FileService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,8 +36,17 @@ public class FileController {
     @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         Resource file = fileService.loadFile(filename);
+
+        String contentType = "application/octet-stream";
+        try {
+            contentType = java.nio.file.Files.probeContentType(file.getFile().toPath());
+        } catch (Exception e) {
+            // Fallback to default
+        }
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .contentType(org.springframework.http.MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
 }

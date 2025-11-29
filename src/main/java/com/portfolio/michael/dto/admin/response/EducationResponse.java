@@ -15,7 +15,7 @@ public class EducationResponse {
     private Long id;
     private String institution;
     private String degree;
-    private String logo;
+    private String logoUrl;
     private LocalDate startDate;
     private LocalDate endDate;
 }
