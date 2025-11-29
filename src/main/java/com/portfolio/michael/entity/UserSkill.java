@@ -1,8 +1,5 @@
 package com.portfolio.michael.entity;
 
-import java.time.LocalDate;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,8 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "educations")
-public class Education {
+@Table(name = "user_skills")
+public class UserSkill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,18 +28,11 @@ public class Education {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private String institution;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "skill_id", nullable = false)
+    private Skill skill;
 
-    @Column(nullable = false)
-    private String degree;
-
-    @Column(name = "logo_url", length = 500)
-    private String logoUrl;
-
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
-
-    @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "proficiency_level_id", nullable = false)
+    private ProficiencyLevel proficiencyLevel;
 }

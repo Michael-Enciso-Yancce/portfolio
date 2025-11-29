@@ -13,7 +13,6 @@ public interface EducationMapper {
     @Mapping(target = "id", ignore = true)
     Education toEntity(EducationRequest request);
 
-    @Mapping(target = "logoUrl", ignore = true)
     EducationResponse toResponse(Education education);
 
     @Mapping(target = "id", ignore = true)

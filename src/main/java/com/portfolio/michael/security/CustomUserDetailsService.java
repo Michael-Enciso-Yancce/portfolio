@@ -1,7 +1,5 @@
 package com.portfolio.michael.security;
 
-import java.util.Collections;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +25,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(
                 user.getEmail(),
                 user.getPassword(),
-                Collections.emptyList() 
-        );
+                user.getRoles().stream()
+                        .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority(
+                                role.getName()))
+                        .collect(java.util.stream.Collectors.toList()));
     }
 }

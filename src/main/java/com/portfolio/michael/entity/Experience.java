@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "educations")
-public class Education {
+@Table(name = "experiences")
+public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,11 +31,14 @@ public class Education {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private String institution;
+    @Column(name = "company_name", nullable = false)
+    private String companyName;
 
     @Column(nullable = false)
-    private String degree;
+    private String role;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @Column(name = "logo_url", length = 500)
     private String logoUrl;
@@ -43,6 +46,6 @@ public class Education {
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private LocalDate endDate;
 }

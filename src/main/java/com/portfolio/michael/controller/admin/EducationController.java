@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -41,6 +42,7 @@ public class EducationController {
     }
 
     @PostMapping(consumes = "multipart/form-data")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<EducationResponse>> createEducation(
             @Valid @ModelAttribute EducationRequest request) {
         return ResponseEntity
@@ -48,6 +50,7 @@ public class EducationController {
     }
 
     @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<EducationResponse>> updateEducation(@PathVariable Long id,
             @Valid @ModelAttribute EducationRequest request) {
         return ResponseEntity.ok(
@@ -55,6 +58,7 @@ public class EducationController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteEducation(@PathVariable Long id) {
         educationService.deleteEducation(id);
         return ResponseEntity.ok(ApiResponse.success("Education deleted successfully", null));

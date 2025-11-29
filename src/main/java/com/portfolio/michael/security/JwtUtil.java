@@ -15,7 +15,7 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
-    @Value("${app.jwt.secret}")
+    @Value("${jwt.secret}")
     private String secret;
 
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
@@ -27,8 +27,8 @@ public class JwtUtil {
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                .setIssuedAt(new Date()) 
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) 
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
