@@ -27,7 +27,7 @@ public class FileStorageService {
 
     @PostConstruct
     public void init() {
-        this.rootLocation = Paths.get(storageLocation);
+        this.rootLocation = Paths.get(storageLocation).normalize();
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
