@@ -143,7 +143,7 @@ La aplicación estará disponible en `http://localhost:8080`
 
 ## 📁 Estructura del Proyecto
 
-El proyecto sigue una arquitectura modular basada en dominios:
+El proyecto sigue **Arquitectura Hexagonal (Ports & Adapters)** con una organización modular basada en dominios:
 
 ```
 src/main/java/com/portfolio/michael/
@@ -156,41 +156,67 @@ src/main/java/com/portfolio/michael/
 │   │   ├── security/              # JwtService, JwtAuthenticationFilter, SecurityConfig
 │   │   └── service/               # AuthService, AuthServiceImpl
 │   │
-│   ├── project/                   # Módulo de Proyectos
-│   │   ├── controller/            # ProjectController
-│   │   ├── dto/                   # ProjectRequest, ProjectResponse
-│   │   ├── entity/                # Project
-│   │   ├── mapper/                # ProjectMapper
-│   │   ├── repository/            # ProjectRepository
-│   │   └── service/               # ProjectService, ProjectServiceImpl
+│   ├── project/                   # Módulo de Proyectos (Hexagonal)
+│   │   ├── controller/            # ProjectController (Presentation)
+│   │   ├── application/           # Capa de Aplicación
+│   │   │   ├── dto/               # CreateProjectRequest, ProjectResponse
+│   │   │   ├── mapper/            # ProjectMapper
+│   │   │   └── usecase/           # CreateProjectUseCase
+│   │   ├── domain/                # Capa de Dominio
+│   │   │   ├── Project.java       # Entidad de Dominio
+│   │   │   └── ProjectRepository.java  # Port (Interface)
+│   │   └── infrastructure/        # Capa de Infraestructura
+│   │       ├── configuration/     # ProjectConfiguration (Beans)
+│   │       └── persistence/       # JpaProjectRepository (Adapter)
 │   │
-│   ├── education/                 # Módulo de Educación
-│   │   ├── controller/            # EducationController
-│   │   ├── dto/                   # EducationRequest, EducationResponse
-│   │   ├── entity/                # Education
-│   │   ├── mapper/                # EducationMapper
-│   │   ├── repository/            # EducationRepository
-│   │   └── service/               # EducationService, EducationServiceImpl
+│   ├── education/                 # Módulo de Educación (Hexagonal)
+│   │   ├── controller/            # EducationController (Presentation)
+│   │   ├── application/           # Capa de Aplicación
+│   │   │   ├── dto/               # EducationRequest, EducationResponse
+│   │   │   ├── mapper/            # EducationMapper
+│   │   │   └── usecase/           # CreateEducationUseCase, UpdateEducationUseCase, etc.
+│   │   ├── domain/                # Capa de Dominio
+│   │   │   ├── EducationEntity.java    # Entidad de Dominio
+│   │   │   └── EducationRepository.java # Port (Interface)
+│   │   └── infrastructure/        # Capa de Infraestructura
+│   │       ├── configuration/     # EducationConfiguration (Beans)
+│   │       └── persistence/       # JpaEducationRepository (Adapter)
 │   │
-│   ├── experience/                # Módulo de Experiencia
-│   │   ├── controller/            # ExperienceController
-│   │   ├── dto/                   # ExperienceRequest, ExperienceResponse
-│   │   ├── entity/                # Experience
-│   │   ├── mapper/                # ExperienceMapper
-│   │   ├── repository/            # ExperienceRepository
-│   │   └── service/               # ExperienceService, ExperienceServiceImpl
+│   ├── experience/                # Módulo de Experiencia (Hexagonal)
+│   │   ├── controller/            # ExperienceController (Presentation)
+│   │   ├── application/           # Capa de Aplicación
+│   │   │   ├── dto/               # ExperienceRequest, ExperienceResponse
+│   │   │   ├── mapper/            # ExperienceMapper
+│   │   │   └── usecase/           # CreateExperienceUseCase, UpdateExperienceUseCase, etc.
+│   │   ├── domain/                # Capa de Dominio
+│   │   │   ├── ExperienceEntity.java    # Entidad de Dominio
+│   │   │   └── ExperienceRepository.java # Port (Interface)
+│   │   └── infrastructure/        # Capa de Infraestructura
+│   │       ├── configuration/     # ExperienceConfiguration (Beans)
+│   │       └── persistence/       # JpaExperienceRepository (Adapter)
 │   │
-│   ├── catalog/                   # Módulo de Catálogos
-│   │   ├── controller/            # SkillController, ProficiencyLevelController, etc.
-│   │   ├── dto/                   # CatalogResponse, SkillRequest, etc.
-│   │   ├── entity/                # Skill, ProficiencyLevel, ProjectStatus
-│   │   ├── mapper/                # SkillMapper, ProficiencyLevelMapper
-│   │   ├── repository/            # SkillRepository, ProficiencyLevelRepository, etc.
-│   │   └── service/               # SkillService, ProficiencyLevelService, etc.
+│   ├── catalog/                   # Módulo de Catálogos (Hexagonal)
+│   │   ├── controller/            # CatalogController (Presentation)
+│   │   ├── application/           # Capa de Aplicación
+│   │   │   ├── dto/               # CatalogResponse, SkillRequest, etc.
+│   │   │   └── usecase/           # Use Cases para Skills, ProficiencyLevel, etc.
+│   │   ├── domain/                # Capa de Dominio
+│   │   │   ├── Skill.java, ProficiencyLevel.java, ProjectStatus.java
+│   │   │   └── SkillRepository.java, ProficiencyLevelRepository.java, etc.
+│   │   └── infrastructure/        # Capa de Infraestructura
+│   │       ├── configuration/     # CatalogConfiguration (Beans)
+│   │       └── persistence/       # JpaSkillRepository, JpaProficiencyLevelRepository, etc.
 │   │
-│   └── file/                      # Módulo de Archivos
-│       ├── controller/            # FileController
-│       └── service/               # FileStorageService
+│   └── file/                      # Módulo de Archivos (Hexagonal)
+│       ├── controller/            # FileController (Presentation)
+│       ├── application/           # Capa de Aplicación
+│       │   └── usecase/           # GetFileUseCase
+│       ├── domain/                # Capa de Dominio
+│       │   ├── model/             # FileInput
+│       │   └── port/              # FileStoragePort (Interface)
+│       └── infrastructure/        # Capa de Infraestructura
+│           ├── configuration/     # FileConfiguration (Beans)
+│           └── storage/           # FileSystemStorageAdapter (Adapter)
 │
 ├── shared/                        # Componentes Compartidos
 │   ├── config/                    # SwaggerConfig, PasswordEncoderConfig
@@ -204,12 +230,21 @@ src/main/java/com/portfolio/michael/
 ### Descripción de Módulos
 
 - **auth**: Maneja autenticación, autorización y gestión de usuarios
-- **project**: Gestión de proyectos del portafolio
-- **education**: Gestión del historial educativo
-- **experience**: Gestión de experiencia laboral
-- **catalog**: Gestión de catálogos (habilidades, niveles de competencia, estados)
-- **file**: Manejo de carga y descarga de archivos
+- **project**: Gestión de proyectos del portafolio (Arquitectura Hexagonal)
+- **education**: Gestión del historial educativo (Arquitectura Hexagonal)
+- **experience**: Gestión de experiencia laboral (Arquitectura Hexagonal)
+- **catalog**: Gestión de catálogos - habilidades, niveles de competencia, estados (Arquitectura Hexagonal)
+- **file**: Manejo de carga y descarga de archivos (Arquitectura Hexagonal)
 - **shared**: Componentes compartidos entre módulos (configuraciones, DTOs, excepciones)
+
+### Arquitectura Hexagonal
+
+Los módulos `project`, `education`, `experience`, `catalog` y `file` siguen **Arquitectura Hexagonal** con las siguientes capas:
+
+- **Domain (Dominio)**: Contiene la lógica de negocio central, entidades de dominio y ports (interfaces)
+- **Application (Aplicación)**: Contiene los Use Cases que orquestan la lógica de negocio, DTOs y mappers
+- **Infrastructure (Infraestructura)**: Contiene los adapters (implementaciones de ports), configuración y persistencia
+- **Presentation (Presentación)**: Controllers que exponen la API REST
 
 ## 🔑 Credenciales por Defecto
 

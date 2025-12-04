@@ -6,29 +6,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.portfolio.michael.shared.dto.ApiResponse;
-import com.portfolio.michael.modules.auth.dto.AuthResponse;
-import com.portfolio.michael.modules.auth.dto.LoginRequest;
-import com.portfolio.michael.modules.auth.dto.RegisterRequest;
-import com.portfolio.michael.modules.auth.service.AuthService;
+import com.portfolio.michael.modules.auth.application.dto.AuthResponse;
+import com.portfolio.michael.modules.auth.application.dto.LoginRequest;
+import com.portfolio.michael.modules.auth.application.dto.RegisterRequest;
+import com.portfolio.michael.modules.auth.application.usecase.LoginUseCase;
+import com.portfolio.michael.modules.auth.application.usecase.RegisterUseCase;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final LoginUseCase loginUseCase;
+    private final RegisterUseCase registerUseCase;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Login successful", authService.login(request)));
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(loginUseCase.execute(request));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("User registered successfully", authService.register(request)));
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(registerUseCase.execute(request));
     }
 }

@@ -12,10 +12,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portfolio.michael.modules.catalog.application.dto.CatalogRequest;
+import com.portfolio.michael.modules.catalog.application.dto.CatalogResponse;
+import com.portfolio.michael.modules.catalog.application.usecase.CreateProficiencyLevelUseCase;
+import com.portfolio.michael.modules.catalog.application.usecase.CreateProjectStatusUseCase;
+import com.portfolio.michael.modules.catalog.application.usecase.CreateSkillUseCase;
+import com.portfolio.michael.modules.catalog.application.usecase.DeleteProficiencyLevelUseCase;
+import com.portfolio.michael.modules.catalog.application.usecase.DeleteProjectStatusUseCase;
+import com.portfolio.michael.modules.catalog.application.usecase.DeleteSkillUseCase;
+import com.portfolio.michael.modules.catalog.application.usecase.GetProficiencyLevelsUseCase;
+import com.portfolio.michael.modules.catalog.application.usecase.GetProjectStatusesUseCase;
+import com.portfolio.michael.modules.catalog.application.usecase.GetSkillsUseCase;
 import com.portfolio.michael.shared.dto.ApiResponse;
-import com.portfolio.michael.modules.catalog.dto.CatalogRequest;
-import com.portfolio.michael.modules.catalog.dto.CatalogResponse;
-import com.portfolio.michael.modules.catalog.service.CatalogService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,24 +33,34 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CatalogController {
 
-    private final CatalogService catalogService;
+    private final GetSkillsUseCase getSkillsUseCase;
+    private final CreateSkillUseCase createSkillUseCase;
+    private final DeleteSkillUseCase deleteSkillUseCase;
+
+    private final GetProficiencyLevelsUseCase getProficiencyLevelsUseCase;
+    private final CreateProficiencyLevelUseCase createProficiencyLevelUseCase;
+    private final DeleteProficiencyLevelUseCase deleteProficiencyLevelUseCase;
+
+    private final GetProjectStatusesUseCase getProjectStatusesUseCase;
+    private final CreateProjectStatusUseCase createProjectStatusUseCase;
+    private final DeleteProjectStatusUseCase deleteProjectStatusUseCase;
 
     // Skills
     @GetMapping("/skills")
     public ResponseEntity<ApiResponse<List<CatalogResponse>>> getAllSkills() {
-        return ResponseEntity.ok(ApiResponse.success("Skills retrieved", catalogService.getAllSkills()));
+        return ResponseEntity.ok(ApiResponse.success("Skills retrieved", getSkillsUseCase.execute()));
     }
 
     @PostMapping("/skills")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<CatalogResponse>> createSkill(@Valid @RequestBody CatalogRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Skill created", catalogService.createSkill(request)));
+        return ResponseEntity.ok(ApiResponse.success("Skill created", createSkillUseCase.execute(request)));
     }
 
     @DeleteMapping("/skills/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteSkill(@PathVariable Long id) {
-        catalogService.deleteSkill(id);
+        deleteSkillUseCase.execute(id);
         return ResponseEntity.ok(ApiResponse.success("Skill deleted", null));
     }
 
@@ -50,7 +68,7 @@ public class CatalogController {
     @GetMapping("/proficiency-levels")
     public ResponseEntity<ApiResponse<List<CatalogResponse>>> getAllProficiencyLevels() {
         return ResponseEntity
-                .ok(ApiResponse.success("Proficiency levels retrieved", catalogService.getAllProficiencyLevels()));
+                .ok(ApiResponse.success("Proficiency levels retrieved", getProficiencyLevelsUseCase.execute()));
     }
 
     @PostMapping("/proficiency-levels")
@@ -58,13 +76,13 @@ public class CatalogController {
     public ResponseEntity<ApiResponse<CatalogResponse>> createProficiencyLevel(
             @Valid @RequestBody CatalogRequest request) {
         return ResponseEntity
-                .ok(ApiResponse.success("Proficiency level created", catalogService.createProficiencyLevel(request)));
+                .ok(ApiResponse.success("Proficiency level created", createProficiencyLevelUseCase.execute(request)));
     }
 
     @DeleteMapping("/proficiency-levels/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteProficiencyLevel(@PathVariable Long id) {
-        catalogService.deleteProficiencyLevel(id);
+        deleteProficiencyLevelUseCase.execute(id);
         return ResponseEntity.ok(ApiResponse.success("Proficiency level deleted", null));
     }
 
@@ -72,7 +90,7 @@ public class CatalogController {
     @GetMapping("/project-statuses")
     public ResponseEntity<ApiResponse<List<CatalogResponse>>> getAllProjectStatuses() {
         return ResponseEntity
-                .ok(ApiResponse.success("Project statuses retrieved", catalogService.getAllProjectStatuses()));
+                .ok(ApiResponse.success("Project statuses retrieved", getProjectStatusesUseCase.execute()));
     }
 
     @PostMapping("/project-statuses")
@@ -80,13 +98,13 @@ public class CatalogController {
     public ResponseEntity<ApiResponse<CatalogResponse>> createProjectStatus(
             @Valid @RequestBody CatalogRequest request) {
         return ResponseEntity
-                .ok(ApiResponse.success("Project status created", catalogService.createProjectStatus(request)));
+                .ok(ApiResponse.success("Project status created", createProjectStatusUseCase.execute(request)));
     }
 
     @DeleteMapping("/project-statuses/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteProjectStatus(@PathVariable Long id) {
-        catalogService.deleteProjectStatus(id);
+        deleteProjectStatusUseCase.execute(id);
         return ResponseEntity.ok(ApiResponse.success("Project status deleted", null));
     }
 }
