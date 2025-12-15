@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: portfolio-backend
+    ports:
+      - "8080:8080"
+      - "5005:5005" # Puerto para debug remoto
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:mysql://db:3306/portfolio?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-root}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-root}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-validate}
+      - SPRING_FLYWAY_ENABLED=true
+      - SPRING_FLYWAY_BASELINE_ON_MIGRATE=true
+      - SPRING_FLYWAY_REPAIR_ON_MIGRATE=true
+      - APP_STORAGE_LOCATION=/app/uploads
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-86400000}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+      # Debug configuration (comment out for production)
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - db
+    networks:
+      - portfolio-network
+
+  db:
+    image: mysql:8.0
+    container_name: portfolio-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-root}
+      - MYSQL_DATABASE=portfolio
+    ports:
+      - "3307:3306" # Mapped to 3307 to avoid conflict with local MySQL if running
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - portfolio-network
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  db_data:
+
+
+networks:
+  portfolio-network:
+    driver: bridge
