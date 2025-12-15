@@ -23,6 +23,10 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+        @org.springframework.beans.factory.annotation.Value("${app.cors.allowed-origins}")
+        private String[] allowedOrigins;
+
         private final JwtAuthenticationFilter jwtAuthenticationFilter;
         private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
@@ -80,8 +84,7 @@ public class SecurityConfig {
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080",
-                                "https://portfolio-production-6cca.up.railway.app"));
+                configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 configuration.setAllowedHeaders(Arrays.asList("*"));
                 configuration.setAllowCredentials(true);
