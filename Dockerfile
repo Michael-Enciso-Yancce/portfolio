@@ -12,7 +12,7 @@ COPY --from=build /app/target/*.jar app.jar
 
 # Create uploads directory
 RUN mkdir -p uploads
-VOLUME /app/uploads
+# VOLUME /app/uploads
 
 EXPOSE 8080
 EXPOSE 5005
