@@ -41,20 +41,20 @@ public class ProjectController {
     // --- Project Endpoints ---
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponse>> getAll() {
-        return ResponseEntity.ok(projectService.getAllProjects());
+    public ResponseEntity<ApiResponse<List<ProjectResponse>>> getAll() {
+        return ResponseEntity.ok(ApiResponse.success("Projects retrieved", projectService.getAllProjects()));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         projectService.deleteProject(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("Project deleted", null));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProjectResponse> update(
+    public ResponseEntity<ApiResponse<ProjectResponse>> update(
             @PathVariable Long id,
             @RequestPart(value = "name", required = false) String name,
             @RequestPart(value = "description", required = false) String description,
@@ -96,12 +96,13 @@ public class ProjectController {
                 .image(fileInput)
                 .build();
 
-        return ResponseEntity.ok(projectService.updateProject(id, request));
+        return ResponseEntity
+                .ok(ApiResponse.success("Project updated", projectService.updateProject(id, request)));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProjectResponse> create(
+    public ResponseEntity<ApiResponse<ProjectResponse>> create(
             @RequestPart("name") String name,
             @RequestPart(value = "description", required = false) String description,
             @RequestPart("statusId") String statusId,
@@ -146,7 +147,8 @@ public class ProjectController {
                 .image(fileInput)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Project created", projectService.createProject(request)));
     }
 
     // --- Project Status Endpoints ---

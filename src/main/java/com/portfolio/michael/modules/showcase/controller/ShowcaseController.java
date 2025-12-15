@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.michael.modules.showcase.application.dto.CreateShowcaseRequest;
 import com.portfolio.michael.modules.showcase.domain.ProjectShowcase;
+import com.portfolio.michael.shared.dto.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,19 +22,20 @@ public class ShowcaseController {
     private final com.portfolio.michael.modules.showcase.application.service.ShowcaseApplicationService showcaseService;
 
     @PostMapping
-    public ResponseEntity<ProjectShowcase> create(@RequestBody CreateShowcaseRequest request) {
-        return ResponseEntity.ok(showcaseService.createShowcase(request));
+    public ResponseEntity<ApiResponse<ProjectShowcase>> create(@RequestBody CreateShowcaseRequest request) {
+        return ResponseEntity.ok(ApiResponse.success("Showcase created", showcaseService.createShowcase(request)));
     }
 
     @org.springframework.web.bind.annotation.PutMapping("/{id}")
-    public ResponseEntity<ProjectShowcase> update(@PathVariable Long id, @RequestBody CreateShowcaseRequest request) {
-        return ResponseEntity.ok(showcaseService.updateShowcase(id, request));
+    public ResponseEntity<ApiResponse<ProjectShowcase>> update(@PathVariable Long id,
+            @RequestBody CreateShowcaseRequest request) {
+        return ResponseEntity.ok(ApiResponse.success("Showcase updated", showcaseService.updateShowcase(id, request)));
     }
 
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<ProjectShowcase> getByProject(@PathVariable Long projectId) {
+    public ResponseEntity<ApiResponse<ProjectShowcase>> getByProject(@PathVariable Long projectId) {
         return showcaseService.getShowcaseByProjectId(projectId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(showcase -> ResponseEntity.ok(ApiResponse.success("Showcase retrieved", showcase)))
+                .orElse(ResponseEntity.ok(ApiResponse.success("Showcase not found", null)));
     }
 }
