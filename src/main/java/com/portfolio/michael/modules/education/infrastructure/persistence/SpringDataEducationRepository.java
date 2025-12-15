@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SpringDataEducationRepository extends JpaRepository<EducationJpaEntity, Long> {
     List<EducationJpaEntity> findByUserId(Long userId);
+
+    long countByUserId(Long userId);
 }

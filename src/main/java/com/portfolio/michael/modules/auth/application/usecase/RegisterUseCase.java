@@ -47,6 +47,11 @@ public class RegisterUseCase {
 
         return AuthResponse.builder()
                 .token(token)
+                .fullName(savedUser.getFullName())
+                .email(savedUser.getEmail())
+                .roles(savedUser.getRoles().stream().map(role -> role.getName())
+                        .collect(java.util.stream.Collectors.toList()))
+                .profileImageUrl(savedUser.getProfileImageUrl())
                 .build();
     }
 }

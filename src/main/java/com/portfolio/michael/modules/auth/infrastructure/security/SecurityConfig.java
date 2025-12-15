@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 import java.util.Arrays;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
         private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,10 +41,31 @@ public class SecurityConfig {
                                                                 "/webjars/**")
                                                 .permitAll()
                                                 .requestMatchers("/api/public/**").permitAll()
-                                                .requestMatchers("/api/admin/files/**").permitAll() // Allow file
+                                                .requestMatchers("/api/auth/**").permitAll() // Allow auth endpoints
+                                                .requestMatchers("/ws/**").permitAll() // Allow WebSocket connection
+                                                .requestMatchers("/api/admin/files/**").permitAll() // Allow file and //
                                                                                                     // downloads
-                                                .requestMatchers("/api/admin/login").permitAll()
-                                                .requestMatchers("/api/admin/**").authenticated())
+                                                .requestMatchers("/api/auth/google").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/admin/**").authenticated() // Allow
+                                                                                                                  // //
+                                                                                                                  // read-only
+                                                                                                                  // //
+                                                                                                                  // access
+                                                                                                                  // //
+                                                                                                                  // to
+                                                                                                                  // //
+                                                                                                                  // dashboard
+                                                .requestMatchers("/api/admin/**").hasRole("ADMIN") // Write operations
+                                                                                                   // // require ADMIN
+                                                .requestMatchers("/oauth2/**").permitAll() // Allow OAuth2 internals
+                                                .anyRequest().authenticated())
+                                .oauth2Login(oauth2 -> oauth2
+                                                .authorizationEndpoint(auth -> auth
+                                                                .baseUri("/oauth2/authorization")) // Default but
+                                                                                                   // explicit
+                                                .redirectionEndpoint(red -> red
+                                                                .baseUri("/login/oauth2/code/*")) // Default
+                                                .successHandler(oAuth2LoginSuccessHandler))
                                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                                 .build();
@@ -57,9 +80,10 @@ public class SecurityConfig {
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(Arrays.asList("*"));
-                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080"));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 configuration.setAllowedHeaders(Arrays.asList("*"));
+                configuration.setAllowCredentials(true);
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                 source.registerCorsConfiguration("/**", configuration);
                 return source;

@@ -32,6 +32,11 @@ public class LoginUseCase {
 
         return AuthResponse.builder()
                 .token(token)
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .roles(user.getRoles().stream().map(role -> role.getName())
+                        .collect(java.util.stream.Collectors.toList()))
+                .profileImageUrl(user.getProfileImageUrl())
                 .build();
     }
 }

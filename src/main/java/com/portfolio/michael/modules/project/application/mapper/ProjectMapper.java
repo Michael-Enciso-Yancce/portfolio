@@ -2,8 +2,9 @@ package com.portfolio.michael.modules.project.application.mapper;
 
 import java.util.stream.Collectors;
 
-import com.portfolio.michael.modules.catalog.application.dto.CatalogResponse;
 import com.portfolio.michael.modules.project.application.dto.ProjectResponse;
+import com.portfolio.michael.modules.project.application.dto.ProjectStatusResponse;
+import com.portfolio.michael.modules.skill.application.dto.SkillResponse;
 import com.portfolio.michael.modules.project.domain.Project;
 
 public class ProjectMapper {
@@ -16,7 +17,7 @@ public class ProjectMapper {
                                 .id(project.getId())
                                 .name(project.getName())
                                 .description(project.getDescription())
-                                .status(project.getStatus() != null ? CatalogResponse.builder()
+                                .status(project.getStatus() != null ? ProjectStatusResponse.builder()
                                                 .id(project.getStatus().getId())
                                                 .name(project.getStatus().getName())
                                                 .build() : null)
@@ -26,9 +27,11 @@ public class ProjectMapper {
                                 .startDate(project.getStartDate())
                                 .endDate(project.getEndDate())
                                 .skills(project.getSkills().stream()
-                                                .map(skill -> CatalogResponse.builder()
+                                                .map(skill -> SkillResponse.builder()
                                                                 .id(skill.getId())
                                                                 .name(skill.getName())
+                                                                .imageUrl(skill.getImageUrl())
+                                                                .category(skill.getCategory())
                                                                 .build())
                                                 .collect(Collectors.toSet()))
                                 .build();

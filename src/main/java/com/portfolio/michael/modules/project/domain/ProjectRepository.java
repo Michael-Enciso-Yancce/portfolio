@@ -13,4 +13,10 @@ public interface ProjectRepository {
     void deleteById(Long id);
 
     List<Project> findByUserId(Long userId);
+
+    long countByUserId(Long userId);
+
+    List<Project> findRecentByUserId(Long userId);
+
+    long count();
 }

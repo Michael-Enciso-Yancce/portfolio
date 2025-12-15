@@ -31,4 +31,11 @@ public class JpaUserRepository implements UserRepository {
     public Optional<User> findByEmail(String email) {
         return jpa.findByEmail(email).map(UserJpaEntity::toDomain);
     }
+
+    @Override
+    public java.util.List<User> findAll() {
+        return jpa.findAll().stream()
+                .map(UserJpaEntity::toDomain)
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

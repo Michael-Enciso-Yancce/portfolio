@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.portfolio.michael.modules.auth.application.port.TokenProvider;
 import com.portfolio.michael.modules.auth.domain.User;
-import com.portfolio.michael.modules.auth.infrastructure.security.JwtService;
 
 import lombok.RequiredArgsConstructor;
 

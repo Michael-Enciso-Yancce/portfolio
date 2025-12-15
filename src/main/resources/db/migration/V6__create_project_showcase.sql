@@ -1,0 +1,10 @@
+CREATE TABLE project_showcase (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    project_id BIGINT NOT NULL,
+    version INT NOT NULL,
+    content JSON NOT NULL,
+    is_current BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_project_showcase_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);

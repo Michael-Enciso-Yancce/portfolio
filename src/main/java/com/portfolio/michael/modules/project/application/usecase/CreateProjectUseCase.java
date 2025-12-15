@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.portfolio.michael.modules.auth.domain.User;
-import com.portfolio.michael.modules.catalog.domain.ProjectStatus;
-import com.portfolio.michael.modules.catalog.domain.Skill;
+import com.portfolio.michael.modules.project.domain.ProjectStatus;
+import com.portfolio.michael.modules.skill.domain.Skill;
 import com.portfolio.michael.modules.project.application.dto.CreateProjectRequest;
 import com.portfolio.michael.modules.project.application.dto.ProjectResponse;
 import com.portfolio.michael.modules.project.application.mapper.ProjectMapper;
@@ -18,20 +18,26 @@ public class CreateProjectUseCase {
     private final ProjectRepository projectRepository;
     private final FileStoragePort fileStoragePort;
     private final com.portfolio.michael.modules.auth.domain.UserRepository userRepository;
-    private final com.portfolio.michael.modules.catalog.domain.ProjectStatusRepository statusRepository;
-    private final com.portfolio.michael.modules.catalog.domain.SkillRepository skillRepository;
+    private final com.portfolio.michael.modules.project.domain.ProjectStatusRepository statusRepository;
+    private final com.portfolio.michael.modules.skill.domain.SkillRepository skillRepository;
+    private final org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
+    private final com.portfolio.michael.modules.showcase.application.usecase.CreateProjectShowcaseUseCase createShowcaseUseCase;
 
     public CreateProjectUseCase(
             ProjectRepository projectRepository,
             FileStoragePort fileStoragePort,
             com.portfolio.michael.modules.auth.domain.UserRepository userRepository,
-            com.portfolio.michael.modules.catalog.domain.ProjectStatusRepository statusRepository,
-            com.portfolio.michael.modules.catalog.domain.SkillRepository skillRepository) {
+            com.portfolio.michael.modules.project.domain.ProjectStatusRepository statusRepository,
+            com.portfolio.michael.modules.skill.domain.SkillRepository skillRepository,
+            org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate,
+            com.portfolio.michael.modules.showcase.application.usecase.CreateProjectShowcaseUseCase createShowcaseUseCase) {
         this.projectRepository = projectRepository;
         this.fileStoragePort = fileStoragePort;
         this.userRepository = userRepository;
         this.statusRepository = statusRepository;
         this.skillRepository = skillRepository;
+        this.messagingTemplate = messagingTemplate;
+        this.createShowcaseUseCase = createShowcaseUseCase;
     }
 
     public ProjectResponse execute(CreateProjectRequest request) {
@@ -70,7 +76,25 @@ public class CreateProjectUseCase {
         // 4. Save
         Project saved = projectRepository.save(project);
 
+        // 5. Create Showcase if content is present
+        if (request.getShowcaseContent() != null) {
+            com.portfolio.michael.modules.showcase.application.dto.CreateShowcaseRequest showcaseRequest = new com.portfolio.michael.modules.showcase.application.dto.CreateShowcaseRequest();
+            showcaseRequest.setProjectId(saved.getId());
+            showcaseRequest.setContent(request.getShowcaseContent());
+            showcaseRequest.setCurrent(true);
+            createShowcaseUseCase.execute(showcaseRequest);
+        }
+
         // 5. Return DTO
-        return ProjectMapper.toResponse(saved);
+        ProjectResponse response = ProjectMapper.toResponse(saved);
+
+        // 6. Broadcast Real-time Update
+        java.util.Map<String, Object> notification = new java.util.HashMap<>();
+        notification.put("type", "CREATE");
+        notification.put("entity", "PROJECT");
+        notification.put("data", response);
+        messagingTemplate.convertAndSend("/topic/projects", notification);
+
+        return response;
     }
 }

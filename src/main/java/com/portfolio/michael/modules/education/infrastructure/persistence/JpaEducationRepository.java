@@ -37,6 +37,16 @@ public class JpaEducationRepository implements EducationRepository {
     }
 
     @Override
+    public long countByUserId(Long userId) {
+        return jpa.countByUserId(userId);
+    }
+
+    @Override
+    public long count() {
+        return jpa.count();
+    }
+
+    @Override
     public void deleteById(Long id) {
         jpa.deleteById(id);
     }

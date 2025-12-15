@@ -6,10 +6,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.portfolio.michael.modules.auth.domain.User;
+import com.portfolio.michael.modules.auth.domain.AuthProvider;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,11 +53,18 @@ public class UserJpaEntity {
     @Column(name = "profile_image_url", length = 500)
     private String profileImageUrl;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthProvider authProvider;
+
+    @Column(name = "provider_id")
+    private String providerId;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -76,6 +87,9 @@ public class UserJpaEntity {
     protected void onCreate() {
         createdAt = new Date();
         updatedAt = new Date();
+        if (authProvider == null) {
+            authProvider = AuthProvider.LOCAL;
+        }
     }
 
     @PreUpdate
@@ -92,6 +106,8 @@ public class UserJpaEntity {
                 .profileImageUrl(this.profileImageUrl)
                 .password(this.password)
                 .email(this.email)
+                .authProvider(this.authProvider)
+                .providerId(this.providerId)
                 .roles(this.roles.stream().map(RoleJpaEntity::toDomain).collect(Collectors.toSet()))
                 .createdAt(this.createdAt)
                 .updatedAt(this.updatedAt)
@@ -108,6 +124,8 @@ public class UserJpaEntity {
                 .profileImageUrl(user.getProfileImageUrl())
                 .password(user.getPassword())
                 .email(user.getEmail())
+                .authProvider(user.getAuthProvider())
+                .providerId(user.getProviderId())
                 .roles(user.getRoles().stream().map(RoleJpaEntity::fromDomain).collect(Collectors.toSet()))
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())

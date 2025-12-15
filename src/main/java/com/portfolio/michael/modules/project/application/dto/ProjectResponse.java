@@ -3,7 +3,7 @@ package com.portfolio.michael.modules.project.application.dto;
 import java.time.LocalDate;
 import java.util.Set;
 
-import com.portfolio.michael.modules.catalog.application.dto.CatalogResponse;
+import com.portfolio.michael.modules.skill.application.dto.SkillResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,11 +18,11 @@ public class ProjectResponse {
     private Long id;
     private String name;
     private String description;
-    private CatalogResponse status;
+    private ProjectStatusResponse status;
     private String projectUrl;
     private String githubUrl;
     private String imageUrl;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Set<CatalogResponse> skills;
+    private Set<SkillResponse> skills;
 }

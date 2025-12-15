@@ -25,4 +25,5 @@ public class CreateProjectRequest {
     private LocalDate startDate;
     private LocalDate endDate;
     private Set<Long> skillIds;
+    private com.portfolio.michael.modules.showcase.domain.model.ProjectShowcaseContent showcaseContent;
 }

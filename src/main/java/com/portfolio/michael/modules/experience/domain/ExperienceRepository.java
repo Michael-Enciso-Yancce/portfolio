@@ -8,6 +8,10 @@ public interface ExperienceRepository {
 
     Optional<Experience> findById(Long id);
 
+    long countByUserId(Long userId);
+
+    long count();
+
     Experience save(Experience experience);
 
     void deleteById(Long id);

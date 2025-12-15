@@ -42,6 +42,23 @@ public class JpaProjectRepository implements ProjectRepository {
     }
 
     @Override
+    public long countByUserId(Long userId) {
+        return jpa.countByUserId(userId);
+    }
+
+    @Override
+    public List<Project> findRecentByUserId(Long userId) {
+        return jpa.findTop5ByUserIdOrderByIdDesc(userId).stream()
+                .map(ProjectJpaEntity::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public long count() {
+        return jpa.count();
+    }
+
+    @Override
     public List<Project> findByUserId(Long userId) {
         return jpa.findByUserId(userId).stream()
                 .map(ProjectJpaEntity::toDomain)

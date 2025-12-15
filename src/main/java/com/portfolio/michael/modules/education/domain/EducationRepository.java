@@ -8,6 +8,12 @@ public interface EducationRepository {
 
     Optional<Education> findById(Long id);
 
+    List<Education> findByUserId(Long userId);
+
+    long countByUserId(Long userId);
+
+    long count();
+
     Education save(Education education);
 
     void deleteById(Long id);

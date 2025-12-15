@@ -22,6 +22,9 @@ public class User {
     private String password;
     private String email;
     @Builder.Default
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+    private String providerId;
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
     private Date createdAt;
     private Date updatedAt;

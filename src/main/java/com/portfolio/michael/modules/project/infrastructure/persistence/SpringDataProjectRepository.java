@@ -8,4 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SpringDataProjectRepository extends JpaRepository<ProjectJpaEntity, Long> {
     List<ProjectJpaEntity> findByUserId(Long userId);
+
+    long countByUserId(Long userId);
+
+    List<ProjectJpaEntity> findTop5ByUserIdOrderByIdDesc(Long userId);
 }
