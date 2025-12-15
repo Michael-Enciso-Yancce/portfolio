@@ -30,10 +30,8 @@ public class SwaggerConfig {
                                                                 .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
                                 // 🔹 Servidores disponibles
                                 .servers(List.of(
-                                                new Server().url("http://localhost:8080").description("Servidor local")
-                                // new Server().url("https://api.miempresa.com").description("Servidor de
-                                // producción")
-                                ))
+                                                new Server().url("/").description(
+                                                                "Servidor por defecto (Detectado automáticamente)")))
                                 // 🔹 Configuración de Seguridad (JWT)
                                 .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement()
                                                 .addList("Bearer Authentication"))
