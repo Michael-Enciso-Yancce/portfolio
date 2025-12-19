@@ -79,11 +79,9 @@ public class SkillApplicationService {
             if (request.getProficiencyLevelId() != null) {
                 userSkillResponse = updateUserSkillUseCase.execute(userId, id, request.getProficiencyLevelId());
             } else {
-                userSkillResponse = userSkillRepository.findByUserIdAndSkillId(userId, id)
-                        .map(us -> UserSkillResponse.builder()
-                                .proficiencyLevelName(us.getProficiencyLevel().getName())
-                                .build())
-                        .orElse(null);
+                // Si no se envía nivel, eliminar la asociación existente si existe
+                userSkillRepository.findByUserIdAndSkillId(userId, id)
+                        .ifPresent(userSkill -> userSkillRepository.deleteById(userSkill.getId()));
             }
             response.setUserSkill(userSkillResponse);
         }
