@@ -38,4 +38,16 @@ public class JpaUserRepository implements UserRepository {
                 .map(UserJpaEntity::toDomain)
                 .collect(java.util.stream.Collectors.toList());
     }
+
+    @Override
+    public void deleteAll() {
+        jpa.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Iterable<User> users) {
+        java.util.List<UserJpaEntity> entities = new java.util.ArrayList<>();
+        users.forEach(u -> entities.add(UserJpaEntity.fromDomain(u)));
+        jpa.saveAll(entities);
+    }
 }

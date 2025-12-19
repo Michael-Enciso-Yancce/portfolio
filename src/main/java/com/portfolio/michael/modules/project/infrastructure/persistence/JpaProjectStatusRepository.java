@@ -40,4 +40,16 @@ public class JpaProjectStatusRepository implements ProjectStatusRepository {
     public void deleteById(Long id) {
         jpa.deleteById(id);
     }
+
+    @Override
+    public void deleteAll() {
+        jpa.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Iterable<ProjectStatus> statuses) {
+        java.util.List<ProjectStatusJpaEntity> entities = new java.util.ArrayList<>();
+        statuses.forEach(s -> entities.add(ProjectStatusJpaEntity.fromDomain(s)));
+        jpa.saveAll(entities);
+    }
 }

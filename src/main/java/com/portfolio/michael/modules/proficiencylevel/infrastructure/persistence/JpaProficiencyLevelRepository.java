@@ -40,4 +40,16 @@ public class JpaProficiencyLevelRepository implements ProficiencyLevelRepository
     public void deleteById(Long id) {
         jpa.deleteById(id);
     }
+
+    @Override
+    public void deleteAll() {
+        jpa.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Iterable<ProficiencyLevel> proficiencyLevels) {
+        java.util.List<ProficiencyLevelJpaEntity> entities = new java.util.ArrayList<>();
+        proficiencyLevels.forEach(p -> entities.add(ProficiencyLevelJpaEntity.fromDomain(p)));
+        jpa.saveAll(entities);
+    }
 }

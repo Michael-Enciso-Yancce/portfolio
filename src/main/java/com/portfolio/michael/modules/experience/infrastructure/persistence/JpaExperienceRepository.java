@@ -56,4 +56,16 @@ public class JpaExperienceRepository implements ExperienceRepository {
                 .map(ExperienceJpaEntity::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAll() {
+        jpa.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Iterable<Experience> experiences) {
+        java.util.List<ExperienceJpaEntity> entities = new java.util.ArrayList<>();
+        experiences.forEach(e -> entities.add(ExperienceJpaEntity.fromDomain(e)));
+        jpa.saveAll(entities);
+    }
 }

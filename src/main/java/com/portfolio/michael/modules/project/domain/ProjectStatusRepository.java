@@ -11,4 +11,8 @@ public interface ProjectStatusRepository {
     ProjectStatus save(ProjectStatus status);
 
     void deleteById(Long id);
+
+    void deleteAll();
+
+    void saveAll(Iterable<ProjectStatus> statuses);
 }

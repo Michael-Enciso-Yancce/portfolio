@@ -1,15 +1,10 @@
 -- ============================================================================
--- PORTFOLIO DATABASE - INITIAL SCHEMA
--- ============================================================================
--- This migration creates all tables in their final state
--- Consolidates: V1-V9, V12-V13 from original migrations
+-- PORTFOLIO DATABASE - INITIAL SCHEMA (CONSOLIDATED)
 -- ============================================================================
 
 -- ============================================================================
--- USERS AND AUTHENTICATION
+-- 1. USERS & AUTH
 -- ============================================================================
-
--- Users table with OAuth support
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(255),
@@ -27,13 +22,11 @@ CREATE TABLE users (
     INDEX idx_users_provider (auth_provider, provider_id)
 );
 
--- Roles table
 CREATE TABLE roles (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
--- User-Roles relationship (Many-to-Many)
 CREATE TABLE user_roles (
     user_id BIGINT NOT NULL,
     role_id BIGINT NOT NULL,
@@ -43,9 +36,8 @@ CREATE TABLE user_roles (
 );
 
 -- ============================================================================
--- EDUCATION
+-- 2. EDUCATION & EXPERIENCE
 -- ============================================================================
-
 CREATE TABLE educations (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -57,10 +49,6 @@ CREATE TABLE educations (
     CONSTRAINT fk_educations_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     INDEX idx_educations_user (user_id)
 );
-
--- ============================================================================
--- EXPERIENCE
--- ============================================================================
 
 CREATE TABLE experiences (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -76,25 +64,21 @@ CREATE TABLE experiences (
 );
 
 -- ============================================================================
--- SKILLS SYSTEM
+-- 3. SKILL SYSTEM
 -- ============================================================================
-
--- Skills catalog with categories and images
 CREATE TABLE skills (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
-    image_url VARCHAR(500) COMMENT 'URL de la imagen/icono de la habilidad para mostrar en el portafolio',
-    category VARCHAR(50) COMMENT 'Categoría de la habilidad: FRONTEND, BACKEND, TOOLS, DATABASE, OTHER',
+    image_url VARCHAR(500),
+    category VARCHAR(50),
     INDEX idx_skills_category (category)
 );
 
--- Proficiency levels catalog
 CREATE TABLE proficiency_levels (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
--- User skills with proficiency level
 CREATE TABLE user_skills (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -107,16 +91,13 @@ CREATE TABLE user_skills (
 );
 
 -- ============================================================================
--- PROJECTS SYSTEM
+-- 4. PROJECTS SYSTEM & SHOWCASE
 -- ============================================================================
-
--- Project statuses catalog
 CREATE TABLE project_statuses (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
--- Projects table
 CREATE TABLE projects (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -134,11 +115,35 @@ CREATE TABLE projects (
     INDEX idx_projects_status (status_id)
 );
 
--- Project-Skills relationship (Many-to-Many)
 CREATE TABLE project_skills (
     project_id BIGINT NOT NULL,
     skill_id BIGINT NOT NULL,
     PRIMARY KEY (project_id, skill_id),
     CONSTRAINT fk_project_skills_project FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
     CONSTRAINT fk_project_skills_skill FOREIGN KEY (skill_id) REFERENCES skills (id) ON DELETE CASCADE
+);
+
+CREATE TABLE project_showcase (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    project_id BIGINT NOT NULL,
+    version INT NOT NULL,
+    content JSON NOT NULL,
+    is_current BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_project_showcase_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
+-- ============================================================================
+-- 5. CONTACTS
+-- ============================================================================
+CREATE TABLE contacts (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_contacts_status (status),
+    INDEX idx_contacts_created_at (created_at)
 );

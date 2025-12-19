@@ -17,4 +17,8 @@ public interface SkillRepository {
     void deleteById(Long id);
 
     long count();
+
+    void deleteAll();
+
+    void saveAll(Iterable<Skill> skills);
 }

@@ -11,4 +11,8 @@ public interface ProficiencyLevelRepository {
     ProficiencyLevel save(ProficiencyLevel proficiencyLevel);
 
     void deleteById(Long id);
+
+    void deleteAll();
+
+    void saveAll(Iterable<ProficiencyLevel> proficiencyLevels);
 }

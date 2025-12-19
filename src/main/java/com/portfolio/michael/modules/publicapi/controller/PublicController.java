@@ -74,7 +74,9 @@ public class PublicController {
     @GetMapping("/skills")
     public ResponseEntity<ApiResponse<List<SkillResponse>>> getSkills(
             @RequestParam(required = false) String category) {
-        return ResponseEntity.ok(ApiResponse.success("Skills retrieved", getSkillsUseCase.execute(category, null)));
+        String cleanCategory = (category != null && !category.trim().isEmpty()) ? category.trim() : null;
+        return ResponseEntity
+                .ok(ApiResponse.success("Skills retrieved", getSkillsUseCase.execute(cleanCategory, null)));
     }
 
     @PostMapping("/contact")

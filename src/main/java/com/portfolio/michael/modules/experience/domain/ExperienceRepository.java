@@ -15,4 +15,8 @@ public interface ExperienceRepository {
     Experience save(Experience experience);
 
     void deleteById(Long id);
+
+    void deleteAll();
+
+    void saveAll(Iterable<Experience> experiences);
 }

@@ -19,4 +19,8 @@ public interface ProjectRepository {
     List<Project> findRecentByUserId(Long userId);
 
     long count();
+
+    void deleteAll();
+
+    void saveAll(Iterable<Project> projects);
 }

@@ -56,4 +56,16 @@ public class JpaEducationRepository implements EducationRepository {
                 .map(EducationJpaEntity::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAll() {
+        jpa.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Iterable<Education> educations) {
+        java.util.List<EducationJpaEntity> entities = new java.util.ArrayList<>();
+        educations.forEach(e -> entities.add(EducationJpaEntity.fromDomain(e)));
+        jpa.saveAll(entities);
+    }
 }

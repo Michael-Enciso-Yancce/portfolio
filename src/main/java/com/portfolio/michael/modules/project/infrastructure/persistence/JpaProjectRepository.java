@@ -64,4 +64,16 @@ public class JpaProjectRepository implements ProjectRepository {
                 .map(ProjectJpaEntity::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAll() {
+        jpa.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Iterable<Project> projects) {
+        java.util.List<ProjectJpaEntity> entities = new java.util.ArrayList<>();
+        projects.forEach(p -> entities.add(ProjectJpaEntity.fromDomain(p)));
+        jpa.saveAll(entities);
+    }
 }

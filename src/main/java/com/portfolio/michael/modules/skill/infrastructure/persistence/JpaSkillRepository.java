@@ -59,4 +59,16 @@ public class JpaSkillRepository implements SkillRepository {
     public long count() {
         return jpa.count();
     }
+
+    @Override
+    public void deleteAll() {
+        jpa.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Iterable<Skill> skills) {
+        java.util.List<SkillJpaEntity> entities = new java.util.ArrayList<>();
+        skills.forEach(s -> entities.add(SkillJpaEntity.fromDomain(s)));
+        jpa.saveAll(entities);
+    }
 }

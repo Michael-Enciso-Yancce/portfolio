@@ -17,4 +17,8 @@ public interface EducationRepository {
     Education save(Education education);
 
     void deleteById(Long id);
+
+    void deleteAll();
+
+    void saveAll(Iterable<Education> educations);
 }

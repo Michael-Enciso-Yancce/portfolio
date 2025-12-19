@@ -49,4 +49,31 @@ public class JpaProjectShowcaseRepository implements ProjectShowcaseRepository {
         return simpleRepository.findById(id)
                 .map(ProjectShowcaseJpaEntity::toDomain);
     }
+
+    @Override
+    public java.util.List<ProjectShowcase> findAll() {
+        return simpleRepository.findAll().stream()
+                .map(ProjectShowcaseJpaEntity::toDomain)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public void deleteAll() {
+        simpleRepository.deleteAll();
+    }
+
+    @Override
+    public void saveAll(Iterable<ProjectShowcase> showcases) {
+        java.util.List<ProjectShowcaseJpaEntity> entities = new java.util.ArrayList<>();
+        showcases.forEach(showcase -> {
+            ProjectShowcaseJpaEntity entity = ProjectShowcaseJpaEntity.fromDomain(showcase);
+            if (showcase.getProject() != null && showcase.getProject().getId() != null) {
+                ProjectJpaEntity projectRef = entityManager.getReference(ProjectJpaEntity.class,
+                        showcase.getProject().getId());
+                entity.setProject(projectRef);
+            }
+            entities.add(entity);
+        });
+        simpleRepository.saveAll(entities);
+    }
 }
