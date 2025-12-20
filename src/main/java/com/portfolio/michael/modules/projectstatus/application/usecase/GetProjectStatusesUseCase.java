@@ -1,10 +1,10 @@
-package com.portfolio.michael.modules.project.application.usecase;
+package com.portfolio.michael.modules.projectstatus.application.usecase;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.portfolio.michael.modules.project.application.dto.ProjectStatusResponse;
-import com.portfolio.michael.modules.project.domain.ProjectStatusRepository;
+import com.portfolio.michael.modules.projectstatus.application.dto.ProjectStatusResponse;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository;
 
 public class GetProjectStatusesUseCase {
 

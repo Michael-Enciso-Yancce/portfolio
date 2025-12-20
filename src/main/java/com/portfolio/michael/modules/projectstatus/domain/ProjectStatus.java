@@ -1,4 +1,4 @@
-package com.portfolio.michael.modules.project.application.dto;
+package com.portfolio.michael.modules.projectstatus.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectStatusResponse {
+public class ProjectStatus {
     private Long id;
     private String name;
 }

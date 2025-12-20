@@ -1,9 +1,9 @@
-package com.portfolio.michael.modules.project.application.usecase;
+package com.portfolio.michael.modules.projectstatus.application.usecase;
 
-import com.portfolio.michael.modules.project.application.dto.ProjectStatusRequest;
-import com.portfolio.michael.modules.project.application.dto.ProjectStatusResponse;
-import com.portfolio.michael.modules.project.domain.ProjectStatus;
-import com.portfolio.michael.modules.project.domain.ProjectStatusRepository;
+import com.portfolio.michael.modules.projectstatus.application.dto.ProjectStatusRequest;
+import com.portfolio.michael.modules.projectstatus.application.dto.ProjectStatusResponse;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatus;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository;
 import com.portfolio.michael.shared.exception.ResourceNotFoundException;
 
 public class UpdateProjectStatusUseCase {

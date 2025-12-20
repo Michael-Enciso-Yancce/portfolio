@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.portfolio.michael.modules.auth.domain.User;
-import com.portfolio.michael.modules.project.domain.ProjectStatus;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatus;
 import com.portfolio.michael.modules.skill.domain.Skill;
 import com.portfolio.michael.modules.project.application.dto.CreateProjectRequest;
 import com.portfolio.michael.modules.project.application.dto.ProjectResponse;
@@ -18,7 +18,7 @@ public class CreateProjectUseCase {
     private final ProjectRepository projectRepository;
     private final FileStoragePort fileStoragePort;
     private final com.portfolio.michael.modules.auth.domain.UserRepository userRepository;
-    private final com.portfolio.michael.modules.project.domain.ProjectStatusRepository statusRepository;
+    private final com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository statusRepository;
     private final com.portfolio.michael.modules.skill.domain.SkillRepository skillRepository;
     private final org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
     private final com.portfolio.michael.modules.showcase.application.usecase.CreateProjectShowcaseUseCase createShowcaseUseCase;
@@ -27,7 +27,7 @@ public class CreateProjectUseCase {
             ProjectRepository projectRepository,
             FileStoragePort fileStoragePort,
             com.portfolio.michael.modules.auth.domain.UserRepository userRepository,
-            com.portfolio.michael.modules.project.domain.ProjectStatusRepository statusRepository,
+            com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository statusRepository,
             com.portfolio.michael.modules.skill.domain.SkillRepository skillRepository,
             org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate,
             com.portfolio.michael.modules.showcase.application.usecase.CreateProjectShowcaseUseCase createShowcaseUseCase) {

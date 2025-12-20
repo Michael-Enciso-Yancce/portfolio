@@ -3,6 +3,7 @@ package com.portfolio.michael.modules.project.application.dto;
 import java.time.LocalDate;
 import java.util.Set;
 
+import com.portfolio.michael.modules.projectstatus.application.dto.ProjectStatusResponse;
 import com.portfolio.michael.modules.skill.application.dto.SkillResponse;
 
 import lombok.AllArgsConstructor;

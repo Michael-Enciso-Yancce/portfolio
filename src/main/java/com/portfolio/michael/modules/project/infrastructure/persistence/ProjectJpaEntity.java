@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.portfolio.michael.modules.auth.infrastructure.persistence.UserJpaEntity;
+import com.portfolio.michael.modules.projectstatus.infrastructure.persistence.ProjectStatusJpaEntity;
 import com.portfolio.michael.modules.skill.infrastructure.persistence.SkillJpaEntity;
 import com.portfolio.michael.modules.project.domain.Project;
 

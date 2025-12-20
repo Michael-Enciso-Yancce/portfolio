@@ -4,15 +4,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.portfolio.michael.modules.auth.domain.UserRepository;
-import com.portfolio.michael.modules.project.domain.ProjectStatusRepository;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository;
 import com.portfolio.michael.modules.skill.domain.SkillRepository;
 import com.portfolio.michael.modules.file.domain.port.FileStoragePort;
-import com.portfolio.michael.modules.project.application.usecase.CreateProjectStatusUseCase;
+import com.portfolio.michael.modules.projectstatus.application.usecase.CreateProjectStatusUseCase;
 import com.portfolio.michael.modules.project.application.usecase.CreateProjectUseCase;
-import com.portfolio.michael.modules.project.application.usecase.DeleteProjectStatusUseCase;
+import com.portfolio.michael.modules.projectstatus.application.usecase.DeleteProjectStatusUseCase;
 import com.portfolio.michael.modules.project.application.usecase.DeleteProjectUseCase;
-import com.portfolio.michael.modules.project.application.usecase.GetProjectStatusesUseCase;
-import com.portfolio.michael.modules.project.application.usecase.UpdateProjectStatusUseCase;
+import com.portfolio.michael.modules.projectstatus.application.usecase.GetProjectStatusesUseCase;
+import com.portfolio.michael.modules.projectstatus.application.usecase.UpdateProjectStatusUseCase;
 import com.portfolio.michael.modules.project.domain.ProjectRepository;
 
 @Configuration
@@ -70,19 +70,11 @@ public class ProjectConfiguration {
             CreateProjectUseCase createProjectUseCase,
             com.portfolio.michael.modules.project.application.usecase.GetProjectsUseCase getProjectsUseCase,
             DeleteProjectUseCase deleteProjectUseCase,
-            com.portfolio.michael.modules.project.application.usecase.UpdateProjectUseCase updateProjectUseCase,
-            GetProjectStatusesUseCase getProjectStatusesUseCase,
-            CreateProjectStatusUseCase createProjectStatusUseCase,
-            UpdateProjectStatusUseCase updateProjectStatusUseCase,
-            DeleteProjectStatusUseCase deleteProjectStatusUseCase) {
+            com.portfolio.michael.modules.project.application.usecase.UpdateProjectUseCase updateProjectUseCase) {
         return new com.portfolio.michael.modules.project.application.service.ProjectApplicationService(
                 createProjectUseCase,
                 getProjectsUseCase,
                 deleteProjectUseCase,
-                updateProjectUseCase,
-                getProjectStatusesUseCase,
-                createProjectStatusUseCase,
-                updateProjectStatusUseCase,
-                deleteProjectStatusUseCase);
+                updateProjectUseCase);
     }
 }

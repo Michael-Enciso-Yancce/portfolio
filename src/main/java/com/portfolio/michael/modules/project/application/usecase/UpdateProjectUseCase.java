@@ -6,7 +6,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.portfolio.michael.modules.project.domain.ProjectStatus;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatus;
 import com.portfolio.michael.modules.skill.domain.Skill;
 import com.portfolio.michael.modules.file.domain.port.FileStoragePort;
 import com.portfolio.michael.modules.project.application.dto.ProjectResponse;
@@ -23,7 +23,7 @@ public class UpdateProjectUseCase {
 
     private final ProjectRepository projectRepository;
     private final FileStoragePort fileStoragePort;
-    private final com.portfolio.michael.modules.project.domain.ProjectStatusRepository statusRepository;
+    private final com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository statusRepository;
     private final com.portfolio.michael.modules.skill.domain.SkillRepository skillRepository;
     private final org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
 

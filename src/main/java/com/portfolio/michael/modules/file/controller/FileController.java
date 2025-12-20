@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class FileController {
 
     private final GetFileUseCase getFileUseCase;
+    private final com.portfolio.michael.modules.file.application.usecase.UploadFileUseCase uploadFileUseCase;
 
     @GetMapping("/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
@@ -42,5 +43,27 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<java.util.Map<String, String>> uploadFile(
+            @org.springframework.web.bind.annotation.RequestParam("file") org.springframework.web.multipart.MultipartFile file,
+            @org.springframework.web.bind.annotation.RequestParam(value = "folder", defaultValue = "uploads") String folder) {
+
+        try {
+            com.portfolio.michael.modules.file.domain.model.FileInput fileInput = com.portfolio.michael.modules.file.domain.model.FileInput
+                    .builder()
+                    .filename(file.getOriginalFilename())
+                    .contentType(file.getContentType())
+                    .content(file.getInputStream())
+                    .size(file.getSize())
+                    .build();
+
+            String fileUrl = uploadFileUseCase.execute(fileInput, folder);
+
+            return ResponseEntity.ok(java.util.Map.of("url", fileUrl));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to process file upload", e);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.portfolio.michael.modules.project.application.dto;
+package com.portfolio.michael.modules.projectstatus.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

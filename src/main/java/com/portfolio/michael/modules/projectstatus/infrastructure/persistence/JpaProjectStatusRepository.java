@@ -1,4 +1,4 @@
-package com.portfolio.michael.modules.project.infrastructure.persistence;
+package com.portfolio.michael.modules.projectstatus.infrastructure.persistence;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
-import com.portfolio.michael.modules.project.domain.ProjectStatus;
-import com.portfolio.michael.modules.project.domain.ProjectStatusRepository;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatus;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository;
 
 @Repository
 public class JpaProjectStatusRepository implements ProjectStatusRepository {

@@ -3,7 +3,7 @@ package com.portfolio.michael.modules.project.application.mapper;
 import java.util.stream.Collectors;
 
 import com.portfolio.michael.modules.project.application.dto.ProjectResponse;
-import com.portfolio.michael.modules.project.application.dto.ProjectStatusResponse;
+import com.portfolio.michael.modules.projectstatus.application.dto.ProjectStatusResponse;
 import com.portfolio.michael.modules.skill.application.dto.SkillResponse;
 import com.portfolio.michael.modules.project.domain.Project;
 

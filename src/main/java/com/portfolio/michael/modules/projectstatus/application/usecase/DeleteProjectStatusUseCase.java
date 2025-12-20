@@ -1,6 +1,6 @@
-package com.portfolio.michael.modules.project.application.usecase;
+package com.portfolio.michael.modules.projectstatus.application.usecase;
 
-import com.portfolio.michael.modules.project.domain.ProjectStatusRepository;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository;
 
 public class DeleteProjectStatusUseCase {
 

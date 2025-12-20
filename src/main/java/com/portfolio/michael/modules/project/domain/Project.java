@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.portfolio.michael.modules.auth.domain.User;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatus;
 import com.portfolio.michael.modules.skill.domain.Skill;
 
 import lombok.AllArgsConstructor;

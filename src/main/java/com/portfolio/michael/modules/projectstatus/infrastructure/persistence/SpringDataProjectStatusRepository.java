@@ -1,4 +1,4 @@
-package com.portfolio.michael.modules.project.infrastructure.persistence;
+package com.portfolio.michael.modules.projectstatus.infrastructure.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

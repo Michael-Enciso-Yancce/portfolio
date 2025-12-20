@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import com.portfolio.michael.modules.project.application.dto.ProjectResponse;
-import com.portfolio.michael.modules.project.application.dto.ProjectStatusResponse;
+import com.portfolio.michael.modules.projectstatus.application.dto.ProjectStatusResponse;
 import com.portfolio.michael.modules.skill.application.dto.SkillResponse;
 import com.portfolio.michael.modules.project.domain.Project;
 import com.portfolio.michael.modules.project.domain.ProjectRepository;

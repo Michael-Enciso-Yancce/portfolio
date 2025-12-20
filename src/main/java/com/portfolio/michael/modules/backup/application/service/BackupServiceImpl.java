@@ -23,7 +23,7 @@ import com.portfolio.michael.modules.education.domain.EducationRepository;
 import com.portfolio.michael.modules.experience.domain.ExperienceRepository;
 import com.portfolio.michael.modules.proficiencylevel.domain.ProficiencyLevelRepository;
 import com.portfolio.michael.modules.project.domain.ProjectRepository;
-import com.portfolio.michael.modules.project.domain.ProjectStatusRepository;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatusRepository;
 import com.portfolio.michael.modules.showcase.domain.ProjectShowcaseRepository;
 import com.portfolio.michael.modules.skill.domain.SkillRepository;
 

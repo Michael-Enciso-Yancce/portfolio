@@ -1,6 +1,6 @@
-package com.portfolio.michael.modules.project.infrastructure.persistence;
+package com.portfolio.michael.modules.projectstatus.infrastructure.persistence;
 
-import com.portfolio.michael.modules.project.domain.ProjectStatus;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

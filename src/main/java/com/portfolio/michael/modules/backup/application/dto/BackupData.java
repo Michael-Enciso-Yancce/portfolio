@@ -6,7 +6,7 @@ import com.portfolio.michael.modules.education.domain.Education;
 import com.portfolio.michael.modules.experience.domain.Experience;
 import com.portfolio.michael.modules.proficiencylevel.domain.ProficiencyLevel;
 import com.portfolio.michael.modules.project.domain.Project;
-import com.portfolio.michael.modules.project.domain.ProjectStatus;
+import com.portfolio.michael.modules.projectstatus.domain.ProjectStatus;
 import com.portfolio.michael.modules.showcase.domain.ProjectShowcase;
 import com.portfolio.michael.modules.skill.domain.Skill;
 import com.portfolio.michael.modules.auth.domain.User;

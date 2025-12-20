@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,12 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.portfolio.michael.modules.file.domain.model.FileInput;
 import com.portfolio.michael.modules.project.application.dto.CreateProjectRequest;
 import com.portfolio.michael.modules.project.application.dto.ProjectResponse;
-import com.portfolio.michael.modules.project.application.dto.ProjectStatusRequest;
-import com.portfolio.michael.modules.project.application.dto.ProjectStatusResponse;
 import com.portfolio.michael.modules.project.application.dto.UpdateProjectRequest;
 import com.portfolio.michael.shared.dto.ApiResponse;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -66,6 +62,22 @@ public class ProjectController {
             @RequestPart(value = "skillIds", required = false) String skillIds,
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
 
+        // Logic:
+        // Use @RequestPart because @RequestParam fails for PUT multipart in some
+        // containers.
+        // Check if this looks like a full update (e.g. "name" is present)
+        boolean isFullUpdate = name != null;
+
+        // 1. If part exists (val != null) -> Update to value (empty string if empty)
+        // 2. If part Missing (val == null) AND isFullUpdate -> Update to "" (Clear
+        // field)
+        // 3. If part Missing (val == null) AND !isFullUpdate -> Keep as null (Partial
+        // update, ignore field)
+
+        String effectiveDescription = description != null ? description : (isFullUpdate ? "" : null);
+        String effectiveProjectUrl = projectUrl != null ? projectUrl : (isFullUpdate ? "" : null);
+        String effectiveGithubUrl = githubUrl != null ? githubUrl : (isFullUpdate ? "" : null);
+
         FileInput fileInput = null;
         if (image != null && !image.isEmpty()) {
             fileInput = FileInput.builder()
@@ -85,13 +97,17 @@ public class ProjectController {
         }
 
         UpdateProjectRequest request = UpdateProjectRequest.builder()
-                .name(name)
-                .description(description)
-                .statusId(statusId != null ? Long.parseLong(statusId) : null)
-                .projectUrl(projectUrl)
-                .githubUrl(githubUrl)
-                .startDate(startDate != null ? java.time.LocalDate.parse(startDate) : null)
-                .endDate(endDate != null ? java.time.LocalDate.parse(endDate) : null)
+                // Name: only update if present and not empty (mandatory field)
+                .name(name != null && !name.isEmpty() ? name : null)
+                // Optional text fields:
+                .description(effectiveDescription)
+                .projectUrl(effectiveProjectUrl)
+                .githubUrl(effectiveGithubUrl)
+                // IDs/Dates: parse if present and not empty, otherwise null (ignore update or
+                // clear if logic supported, but usually dates are nullable)
+                .statusId(statusId != null && !statusId.isEmpty() ? Long.parseLong(statusId) : null)
+                .startDate(startDate != null && !startDate.isEmpty() ? java.time.LocalDate.parse(startDate) : null)
+                .endDate(endDate != null && !endDate.isEmpty() ? java.time.LocalDate.parse(endDate) : null)
                 .skillIds(skillIdsSet)
                 .image(fileInput)
                 .build();
@@ -149,37 +165,5 @@ public class ProjectController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Project created", projectService.createProject(request)));
-    }
-
-    // --- Project Status Endpoints ---
-
-    @GetMapping("/statuses")
-    public ResponseEntity<ApiResponse<List<ProjectStatusResponse>>> getAllProjectStatuses() {
-        return ResponseEntity
-                .ok(ApiResponse.success("Project statuses retrieved", projectService.getAllProjectStatuses()));
-    }
-
-    @PostMapping("/statuses")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<ProjectStatusResponse>> createProjectStatus(
-            @Valid @RequestBody ProjectStatusRequest request) {
-        return ResponseEntity
-                .ok(ApiResponse.success("Project status created", projectService.createProjectStatus(request)));
-    }
-
-    @PutMapping("/statuses/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<ProjectStatusResponse>> updateProjectStatus(
-            @PathVariable Long id,
-            @Valid @RequestBody ProjectStatusRequest request) {
-        return ResponseEntity
-                .ok(ApiResponse.success("Project status updated", projectService.updateProjectStatus(id, request)));
-    }
-
-    @DeleteMapping("/statuses/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<Void>> deleteProjectStatus(@PathVariable Long id) {
-        projectService.deleteProjectStatus(id);
-        return ResponseEntity.ok(ApiResponse.success("Project status deleted", null));
     }
 }

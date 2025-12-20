@@ -1,4 +1,4 @@
-package com.portfolio.michael.modules.project.domain;
+package com.portfolio.michael.modules.projectstatus.domain;
 
 import java.util.List;
 import java.util.Optional;
