@@ -10,6 +10,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    @org.springframework.beans.factory.annotation.Value("${app.cors.allowed-origins}")
+    private String[] allowedOrigins;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // Enable a simple memory-based message broker to carry the greeting messages
@@ -24,7 +27,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // Register the "/ws" endpoint, enabling the SockJS protocol.
         // Allowed origins must be configured to allow the React frontend to connect.
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*") // Or specific origins like "http://localhost:5173"
+                .setAllowedOriginPatterns(allowedOrigins)
                 .withSockJS();
     }
 }
